@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class Player_Controller : MonoBehaviour
+{
+    [SerializeField] private Rigidbody2D rb2d;
+    [SerializeField] private float movespeed;
+    [SerializeField] private float JumpForce;
+    private float movehorizontal,movevertical;
+    private bool isJumping;
+    
+    // Start is called before the first frame update
+    void Start()
+    {
+        movespeed= 15f;
+        JumpForce=60f;
+        isJumping=true;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        
+    }
+
+    private void FixedUpdate() 
+    {
+        movehorizontal = Input.GetAxisRaw("Horizontal");
+        movevertical = Input.GetAxisRaw("Vertical");
+
+        if(movehorizontal>0.1f || movehorizontal<-0.1f)
+        {
+        rb2d.velocity = new Vector2(movehorizontal*movespeed,0f);
+        }
+        //rb2d.velocity = new Vector2(movehorizontal*movespeed,0f);
+        if (movevertical>0.1f && !isJumping)
+        {
+        rb2d.AddForce(new Vector2(0f,movevertical*JumpForce),ForceMode2D.Impulse);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if(other.gameObject.tag=="Ground")
+        {
+            isJumping=false;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D other) 
+    {
+        if(other.gameObject.tag=="Ground")
+        {
+            isJumping=true;
+        }    
+    }
+
+
+
+}
